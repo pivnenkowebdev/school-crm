@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 
 from .models import TeacherProfile, Parent, Student, Message
 
-
 @login_required
 def dashboard(request):
     user = request.user
