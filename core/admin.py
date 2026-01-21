@@ -13,7 +13,6 @@ from .models import (
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'role')
 
-
 admin.site.register(SchoolClass)
 admin.site.register(TeacherProfile)
 admin.site.register(Student)
