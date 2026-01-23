@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from .models import (
     User,
     SchoolClass,
@@ -10,8 +11,11 @@ from .models import (
 )
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(DjangoUserAdmin):
     list_display = ('username', 'role')
+    fieldsets = DjangoUserAdmin.fieldsets + (
+        ('Роль', {'fields': ('role',)}),
+    )
 
 admin.site.register(SchoolClass)
 admin.site.register(TeacherProfile)
