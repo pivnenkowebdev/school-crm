@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+
 from .models import (
     User,
     SchoolClass,
@@ -17,9 +18,15 @@ class UserAdmin(DjangoUserAdmin):
         ('Роль', {'fields': ('role',)}),
     )
 
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'school_class', 'created_at')
+    list_filter = ('school_class',)
+
+
 admin.site.register(SchoolClass)
 admin.site.register(TeacherProfile)
 admin.site.register(Student)
 admin.site.register(Parent)
-admin.site.register(Message)
 admin.site.register(FAQ)
