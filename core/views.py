@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import TeacherProfile, Parent, Student, Message
+from .models import TeacherProfile, Parent, Student, Message, SchoolClass
 from django.db.models import Q
 
 @login_required
@@ -9,9 +9,31 @@ def dashboard(request):
 
     # Админ
     if user.role == 'admin':
+
+        if request.method == "POST":
+            title = request.POST.get("title")
+            text = request.POST.get("text")
+            class_id = request.POST.get("school_class")
+
+            school_class = None
+            if class_id:
+                school_class = SchoolClass.objects.get(id=class_id)
+
+            if title and text:
+                Message.objects.create(
+                    author=user,
+                    title=title,
+                    text=text,
+                    school_class=school_class
+                )
+                return redirect('dashboard')
+
         messages = Message.objects.all().order_by('-created_at')
+        classes = SchoolClass.objects.all()
+
         return render(request, 'core/dashboard-admin.html', {
-            'messages': messages
+            'messages': messages,
+            'classes': classes
         })
 
     # Учитель
