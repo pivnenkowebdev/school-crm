@@ -17,6 +17,20 @@ def dashboard(request):
     # Учитель
     elif user.role == 'teacher':
         teacher = TeacherProfile.objects.get(user=user)
+
+        if request.method == "POST":
+            title = request.POST.get("title")
+            text = request.POST.get("text")
+
+            if title and text:
+                Message.objects.create(
+                    author=user,
+                    title=title,
+                    text=text,
+                    school_class=teacher.school_class
+                )
+                return redirect('dashboard')
+
         messages = Message.objects.filter(
             Q(school_class=teacher.school_class) |
             Q(school_class__isnull=True)
