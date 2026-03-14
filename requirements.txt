@@ -1,12 +1,2 @@
-asgiref==3.11.0
 Django==6.0.1
-numpy==2.3.3
-opencv-python==4.8.1.78
-protobuf==4.25.3
-PySide6==6.10.1
-PySide6_Addons==6.10.1
-PySide6_Essentials==6.10.1
-shiboken6==6.10.1
-sqlparse==0.5.4
-tzdata==2025.2
-"gunicorn" 
+gunicorn
