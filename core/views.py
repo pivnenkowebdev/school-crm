@@ -2,38 +2,56 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import TeacherProfile, Parent, Student, Message, SchoolClass
 from django.db.models import Q
+from .models import FAQ
 
 @login_required
 def dashboard(request):
     user = request.user
-
+    faqs = FAQ.objects.all()
     # Админ
     if user.role == 'admin':
 
         if request.method == "POST":
-            title = request.POST.get("title")
-            text = request.POST.get("text")
-            class_id = request.POST.get("school_class")
 
-            school_class = None
-            if class_id:
-                school_class = SchoolClass.objects.get(id=class_id)
+        # создание сообщения
+            if "create_message" in request.POST:
+                title = request.POST.get("title")
+                text = request.POST.get("text")
+                class_id = request.POST.get("school_class")
 
-            if title and text:
-                Message.objects.create(
-                    author=user,
-                    title=title,
-                    text=text,
-                    school_class=school_class
-                )
-                return redirect('dashboard')
+                school_class = None
 
+                if class_id:
+                    school_class = SchoolClass.objects.get(id=class_id)
+
+                if title and text:
+                    Message.objects.create(
+                        author=user,
+                        title=title,
+                        text=text,
+                        school_class=school_class
+                    )
+                    return redirect('dashboard')
+                
+            if "create_faq" in request.POST:
+                question = request.POST.get("question")
+                answer = request.POST.get("answer")
+
+                if question and answer:
+                    FAQ.objects.create(
+                        question=question,
+                        answer=answer
+                    )
+                    return redirect('dashboard')
+                
         messages = Message.objects.all().order_by('-created_at')
         classes = SchoolClass.objects.all()
+        faqs = FAQ.objects.all()
 
         return render(request, 'core/dashboard-admin.html', {
             'messages': messages,
-            'classes': classes
+            'classes': classes,
+            'faqs': faqs
         })
 
     # Учитель
@@ -60,7 +78,8 @@ def dashboard(request):
 
         return render(request, 'core/dashboard-teacher.html', {
             'messages': messages,
-            'school_class': teacher.school_class
+            'school_class': teacher.school_class,
+            "faqs": faqs
         })
 
     # Родитель
@@ -75,7 +94,8 @@ def dashboard(request):
 
         return render(request, 'core/dashboard-parent.html', {
             'messages': messages,
-            'children': children
+            'children': children,
+            "faqs": faqs
         })
 
     # Ученик
@@ -89,7 +109,8 @@ def dashboard(request):
 
         return render(request, 'core/dashboard-student.html', {
             'messages': messages,
-            'school_class': student.school_class
+            'school_class': student.school_class,
+            "faqs": faqs
         })
 
     # Если роль странная

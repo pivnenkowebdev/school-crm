@@ -2,13 +2,14 @@
 <html>
 <head>
     <title>Админ</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
 <h1>Админ</h1>
 
 <h2>Создать сообщение</h2>
-
 <form method="post">
     {% csrf_token %}
 
@@ -27,13 +28,33 @@
     </select>
     <br><br>
 
-    <button type="submit">Отправить</button>
+    <button type="submit" name="create_message">Отправить</button>
 </form>
 
 <hr>
 
-<h2>Все сообщения</h2>
+<h2>создать FAQ</h2>
+<form method="post">
+    {% csrf_token %}
 
+    <input type="text" name="question">
+    <br><br>
+    <textarea name="answer"></textarea>
+    <br><br>
+    <button type="submit" name="create_faq">Создать FAQ</button>
+</form>
+
+<hr>
+<h2>Список FAQ</h2>
+{% for faq in faqs %}
+
+<h4>{{ faq.question }}</h4>
+<p>{{ faq.answer }}</p>
+
+<hr>
+
+{% endfor %}
+<h2>Все сообщения</h2>
 {% for message in messages %}
     <h3>{{ message.title }}</h3>
     <p>{{ message.text }}</p>
