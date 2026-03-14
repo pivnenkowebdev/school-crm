@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <h1>Ученик — класс {{ school_class.name }}</h1>
@@ -13,6 +15,17 @@
     <p>{{ message.text }}</p>
     <hr>
     {% endfor %}
+    <h2>FAQ</h2>
+
+    {% for faq in faqs %}
+
+        <h4>{{ faq.question }}</h4>
+        <p>{{ faq.answer }}</p>
+
+        <hr>
+
+    {% endfor %}
+
     <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Выйти</button>

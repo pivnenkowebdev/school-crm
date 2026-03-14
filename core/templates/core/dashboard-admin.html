@@ -1,20 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Админ</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Администратор</h1>
-    {% for message in messages %}
+
+<h1>Админ</h1>
+
+<h2>Создать сообщение</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <input type="text" name="title" placeholder="Заголовок" required>
+    <br><br>
+
+    <textarea name="text" placeholder="Текст сообщения" required></textarea>
+    <br><br>
+
+    <label>Класс:</label>
+    <select name="school_class">
+        <option value="">Для всех</option>
+        {% for cls in classes %}
+            <option value="{{ cls.id }}">{{ cls.name }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <button type="submit" name="create_message">Отправить</button>
+</form>
+
+<hr>
+
+<h2>создать FAQ</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <input type="text" name="question">
+    <br><br>
+    <textarea name="answer"></textarea>
+    <br><br>
+    <button type="submit" name="create_faq">Создать FAQ</button>
+</form>
+
+<hr>
+<h2>Список FAQ</h2>
+{% for faq in faqs %}
+
+<h4>{{ faq.question }}</h4>
+<p>{{ faq.answer }}</p>
+
+<hr>
+
+{% endfor %}
+<h2>Все сообщения</h2>
+{% for message in messages %}
     <h3>{{ message.title }}</h3>
     <p>{{ message.text }}</p>
+    <p>
+        Класс:
+        {% if message.school_class %}
+            {{ message.school_class.name }}
+        {% else %}
+            Для всех
+        {% endif %}
+    </p>
     <hr>
-    {% endfor %}
-    <form method="post" action="{% url 'logout' %}">
+{% endfor %}
+
+<form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Выйти</button>
 </form>
+
 </body>
 </html>
